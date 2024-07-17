@@ -1,26 +1,33 @@
 import React, { useEffect, useState, useRef } from 'react';
+import {useParams} from 'react-router-dom';
 import AddTrip from './AddTrip';
 import TripItem from './TripItem';
 
+const ITEMS_PER_PAGE = 5;
 
 const ListTrips = () => {
-    const id = useRef(0);
+    const {id} = useParams();
     const [trips, setTrips] = useState([]);
     const [addTrip, setAddTrip] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
     const [fetchError, setFetchError] = useState(null);
+    const [page, setPage] = useState(0);
 
     const API_URL = "http://localhost:8080/trips";
+    // useEffect(() => {
+    //     const usersInLS = localStorage.getItem('usersInLS');
+    //     id.current = usersInLS ? JSON.parse(usersInLS)[0].id : null;
+    //     fetch(`${API_URL}`, {
+    //         method: "GET",
+    //     })
+    //         .then((response) => response.json())
+    //         .then((data) => setTrips(data))
+    //         .catch((error) => setFetchError(error));
+    // }, [])
+
     useEffect(() => {
-        const usersInLS = localStorage.getItem('usersInLS');
-        id.current = usersInLS ? JSON.parse(usersInLS)[0].id : null;
-        fetch(`${API_URL}`, {
-            method: "GET",
-        })
-            .then((response) => response.json())
-            .then((data) => setTrips(data))
-            .catch((error) => setFetchError(error));
-    }, [])
+        getFromServer({ offset: page * ITEMS_PER_PAGE });
+    }, [page]);
 
     const [country, setCountry] = useState("");
 
@@ -58,24 +65,24 @@ const ListTrips = () => {
     //     }
     // }
 
-    const getFromServer = async ({ type = "", value = "", sortBy = "" } = {}) => {
+    const getFromServer = async ({ type = "", value = "", sortBy = "", limit = ITEMS_PER_PAGE, offset = 0 } = {}) => {
         try {
-            let query = "";
+            let query = `?limit=${limit}&offset=${offset}`;
             switch (type) {
                 case "":
                     break;
                 case "country":
-                    query = `?country=${value}`;
+                    query += `&?country=${value}`;
                     break;
                 case "myTrips":
-                    query = `?userId=${value}`;
+                    query += `&?userId=${value}`;
                     break;
                 default:
                     break;
             }
 
             if (sortBy) {
-                query += query ? `&sortBy=${sortBy}` : `?sortBy=${sortBy}`;
+                query += `&sortBy=${sortBy}`;
             }
 
             setIsFetching(true);
@@ -104,7 +111,7 @@ const ListTrips = () => {
                 await getFromServer({ type: "country", value: country });
                 break;
             case 'myTrips':
-                await getFromServer({ type: "myTrips", value: id.current });
+                await getFromServer({ type: "myTrips", value: id });
                 break;
             default:
                 await getFromServer();
@@ -113,6 +120,18 @@ const ListTrips = () => {
 
     const sortBy = (criteria) => {
         getFromServer({ sortBy: criteria });
+    };
+
+    const nextPage = () => {
+        if (trips.length === ITEMS_PER_PAGE) {
+            setPage(prevPage => prevPage + 1);
+        }
+    };
+
+    const prevPage = () => {
+        if (page > 0) {
+            setPage(prevPage => prevPage - 1);
+        }
     };
     //האם בטיחותי שהמזהה נמצא בURL
     //לשאול אם עדיף לשמור את התמונות בדרייב
@@ -157,7 +176,7 @@ const ListTrips = () => {
                 </div>
                 <ol>
                     {trips.length && trips.map((trip) => (
-                        <TripItem key={trip.id} trip={trip} id={id.current} />
+                        <TripItem key={trip.id} trip={trip} id={id} />
                     ))}
                 </ol>
             </div>
