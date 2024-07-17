@@ -2,17 +2,19 @@ import { getAllUsers, getUserById, createUser, updateUserById, deleteUserById } 
 
 // Controller function to get all users
 export const getUsers_ = async (req, res) => {
-    // const { username } = req.query;//בצורה הזו או כמו בשאר העמודים??????????????...
+    // const { username } = req.query;
     try {
+        console.log("nnnnnn")
         const users = await getAllUsers();
         res.status(200).json(users);
     } catch (error) {
+        console.log("llllll")
         res.status(500).json({ error: error.message });
     }
 };
 
 // Controller function to get a user by ID
-export const getUser_ = async (req, res) => {
+export const getUserById_ = async (req, res) => {
     const { id } = req.params;
     try {
         const user = await getUserById(id);
