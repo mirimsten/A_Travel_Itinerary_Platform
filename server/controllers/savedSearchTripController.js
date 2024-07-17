@@ -1,10 +1,10 @@
-import { getAllSavedSearchTrip, getSavedSearchTripById, createSavedSearchTrip, updateSavedSearchTripById, deleteSavedSearchTripById } from '../models/savedSearchTripModel.js';
+import { getAllSavedSearchTrips, getSavedSearchTripById, createSavedSearchTrip, updateSavedSearchTripById, deleteSavedSearchTripById } from '../models/savedSearchTripModel.js';
 
 // Controller function to retrieve all reserved trips
 export const getAllSavedSearchTrip_ = async (req, res) => {
     const { reservedTripId } = req.query;
     try {
-        const reservedTrips = await getAllSavedSearchTrip(reservedTripId);
+        const reservedTrips = await getAllSavedSearchTrips(reservedTripId);
         res.status(200).json(reservedTrips);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -16,10 +16,11 @@ export const getSavedSearchTripById_ = async (req, res) => {
     const { id } = req.params;
     try {
         const reservedTrip = await getSavedSearchTripById(id);
-        if (reservedTrip) {
+        if (reservedTrip.length) {
             res.status(200).json(reservedTrip);
         } else {
-            res.status(404).json({ message: `reserved trip with ID ${id} not found` });
+            // res.status(404).json({ message: `reserved trip with ID ${id} not found` });
+            res.status(404).json(reservedTrip);
         }
     } catch (error) {
         res.status(500).json({ error: error.message });

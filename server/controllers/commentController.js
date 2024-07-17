@@ -27,10 +27,11 @@ export const getCommentById_ = async (req, res) => {
     const { id } = req.params;
     try {
         const comment = await getCommentById(id);
-        if (comment) {
+        if (comment.length) {
             res.status(200).json(comment);
         } else {
-            res.status(404).json({ message: `Comment with ID ${id} not found` });
+            // res.status(404).json({ message: `Comment with ID ${id} not found` });
+            res.status(404).json(comment);
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -39,9 +40,9 @@ export const getCommentById_ = async (req, res) => {
 
 // Controller function to create a new comment
 export const createComment_ = async (req, res) => {
-    const { tripId, userId, userName, body, photo } = req.body;
+    const { tripId, userId, body, photo } = req.body;
     try {
-        const newComment = await createComment(tripId, userId, userName, body, photo);
+        const newComment = await createComment(tripId, userId, body, photo);
         res.status(201).json(newComment);
     } catch (error) {
         res.status(500).json({ error: error.message });

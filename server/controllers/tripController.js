@@ -1,25 +1,38 @@
 import { getAllTrips, getTripById, createTrip, updateTrip, deleteTripById } from '../models/tripModel.js';
 
-//controller function to get all trips
+// //controller function to get all trips
+// export const getTrips_ = async (req, res) => {
+//     const tripData = req.body;
+//     try {
+//         const trips = await getAllTrips(tripData);
+//         res.status(200).json(trips);
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// };
+
+// controller function to get all trips
 export const getTrips_ = async (req, res) => {
-    const tripData = req.body;
+    const { type, value, sortBy } = req.query; // קבלת הפרמטרים מהשאילתה
     try {
-        const trips = await getAllTrips(tripData);
+        const trips = await getAllTrips({ type, value, sortBy });
         res.status(200).json(trips);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
+
 // Controller function to get a trip by ID
 export const getTripById_ = async (req, res) => {
     const { id } = req.params;
     try {
         const trip = await getTripById(id);
-        if (trip) {
+        if (trip.length) {
             res.status(200).json(user);
         } else {
-            res.status(404).json({ message: `User with ID ${id} not found` });
+            // res.status(404).json({ message: `User with ID ${id} not found` });
+            res.status(404).json(user);
         }
     } catch (error) {
         res.status(500).json({ error: error.message });

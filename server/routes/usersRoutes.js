@@ -2,6 +2,7 @@ import express from 'express';
 import {
     getUsers_ as getUsers,
     getUserById_ as getUserById,
+    getUserByEmail_ as getUserByEmail,
     createUser_ as createUser,
     updateUser_ as updateUser,
     deleteUser_ as deleteUser
@@ -13,7 +14,10 @@ const router = express.Router();
 router.get('/', getUsers);
 
 // Route to retrieve a user by ID
-router.get('/:id', getUserById);
+router.get('/id/:id', getUserById);
+
+// Route to retrieve a user by email
+router.get('/email/:email', getUserByEmail);
 
 // Route to create a new user
 router.post('/', createUser);

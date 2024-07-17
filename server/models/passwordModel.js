@@ -35,27 +35,58 @@
 
 
 
+// import { Password } from './db.js';
+
+// // Retrieve the latest password for a user by user ID
+// export async function getPasswordByUserId(idOfUser) {
+//     try {
+//         const password = await Password.findOne({ idOfUser: idOfUser }).sort({ created: -1 }).exec();
+//         return password;
+//     } catch (error) {
+//         throw new Error(`Error retrieving password for user with ID ${idOfUser}: ${error.message}`);
+//     }
+// }
+
+// // Create a new password for a user
+// export async function createPassword(idOfUser, password) {
+//     try {
+//         const newPassword = new Password({
+//             idOfUser: idOfUser,
+//             password: password
+//         });
+//         await newPassword.save();
+//         return getPasswordByUserId(idOfUser);
+//     } catch (error) {
+//         throw new Error(`Error creating password: ${error.message}`);
+//     }
+// }
+
+
+
+
+
+
 import { Password } from './db.js';
 
 // Retrieve the latest password for a user by user ID
-export async function getPasswordByUserId(idOfUser) {
+export async function getPasswordByUserId(userId) {
     try {
-        const password = await Password.findOne({ idOfUser: idOfUser }).sort({ created: -1 }).exec();
-        return password;
+        const password = await Password.findOne({ userId: userId }).sort({ createdAt: -1 }).exec();
+        return password? [password]: [];
     } catch (error) {
-        throw new Error(`Error retrieving password for user with ID ${idOfUser}: ${error.message}`);
+        throw new Error(`Error retrieving password for user with ID ${userId}: ${error.message}`);
     }
 }
 
 // Create a new password for a user
-export async function createPassword(idOfUser, password) {
+export async function createPassword(userId, password) {
     try {
         const newPassword = new Password({
-            idOfUser: idOfUser,
+            userId: userId,
             password: password
         });
         await newPassword.save();
-        return getPasswordByUserId(idOfUser);
+        return getPasswordByUserId(userId);
     } catch (error) {
         throw new Error(`Error creating password: ${error.message}`);
     }

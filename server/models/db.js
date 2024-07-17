@@ -304,7 +304,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const AutoIncrement = require('mongoose-sequence')(mongoose);
+// const AutoIncrement = require('mongoose-sequence')(mongoose);
 const Schema = mongoose.Schema;
 
 dotenv.config({ path: '../.env' });
@@ -330,40 +330,40 @@ const connectDB = async () => {
 const userSchema = new Schema({
   //userId: { type: Number, index: true, unique: true },
   userName: { type: String, required: true },
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   address: { type: String, required: true },
   phone: { type: String },
   isAdmin: { type: Boolean, default: false },
   isBlocked: { type: Boolean, default: false }
 });
 
-// שימוש ב-AutoIncrement עבור userSchema
-userSchema.plugin(AutoIncrement, { inc_field: 'userId' });
+// // שימוש ב-AutoIncrement עבור userSchema
+// userSchema.plugin(AutoIncrement, { inc_field: 'userId' });
 
 // הגדרת סכימה עבור Password
 const passwordSchema = new Schema({
-  userId: { type: Number, ref: 'User', required: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   createdAt: { type: Date, default: Date.now },
   password: { type: String, required: true, unique: true }
 });
 
 // הגדרת סכימה עבור Saved_Search_Trips
 const savedSearchTripsSchema = new Schema({
-  searchTripId: { type: Number, index: true, unique: true },
+  // searchTripId: { type: Number, index: true, unique: true },
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   country: { type: String },
   startDate: { type: Date },
   endDate: { type: Date }
 });
 
-// שימוש ב-AutoIncrement עבור savedSearchTripsSchema
-savedSearchTripsSchema.plugin(AutoIncrement, { inc_field: 'searchTripId' });
+// // שימוש ב-AutoIncrement עבור savedSearchTripsSchema
+// savedSearchTripsSchema.plugin(AutoIncrement, { inc_field: 'searchTripId' });
 
 // הגדרת סכימה עבור Trips
 const tripsSchema = new Schema({
-  tripId: { type: Number, index: true, unique: true },
+  // tripId: { type: Number, index: true, unique: true },
   title: { type: String, required: true },
-  userId: { type: Number, ref: 'User', required: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   country: { type: String },
   description: { type: String },
   duration: { type: String },
@@ -372,21 +372,20 @@ const tripsSchema = new Schema({
   likes: { type: Number, default: 0 }
 });
 
-// שימוש ב-AutoIncrement עבור tripsSchema
-tripsSchema.plugin(AutoIncrement, { inc_field: 'tripId' });
+// // שימוש ב-AutoIncrement עבור tripsSchema
+// tripsSchema.plugin(AutoIncrement, { inc_field: 'tripId' });
 
 // הגדרת סכימה עבור Comments
 const commentsSchema = new Schema({
-  commentId: { type: Number, index: true, unique: true },
-  userId: { type: Number, ref: 'User', required: true },
-  username: { type: String, required: true },
-  tripId: { type: Number, ref: 'Trip', required: true },
+  // commentId: { type: Number, index: true, unique: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  tripId: { type: Schema.Types.ObjectId, ref: 'Trip', required: true },
   content: { type: String },
   imageUrl: { type: String }
 });
 
-// שימוש ב-AutoIncrement עבור commentsSchema
-commentsSchema.plugin(AutoIncrement, { inc_field: 'commentId' });
+// // שימוש ב-AutoIncrement עבור commentsSchema
+// commentsSchema.plugin(AutoIncrement, { inc_field: 'commentId' });
 
 // יצירת מודלים
 const User = mongoose.model('User', userSchema);
@@ -395,4 +394,9 @@ const Trip = mongoose.model('Trip', tripsSchema);
 const SavedSearchTrip = mongoose.model('Saved_Search_Trip', savedSearchTripsSchema);
 const Comment = mongoose.model('Comment', commentsSchema);
 
-export { User, Password, Trip, SavedSearchTrip, Comment, connectDB };
+
+
+
+connectDB();
+
+export { User, Password, Trip, SavedSearchTrip, Comment };

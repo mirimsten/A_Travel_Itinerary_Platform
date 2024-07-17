@@ -79,7 +79,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { connectDB } from './models/db.js';
+//import { connectDB } from './models/db.js';
 import userRoutes from './routes/usersRoutes.js';
 import tripsRoutes from './routes/tripsRoutes.js';
 import passwordsRoutes from './routes/passwordsRoutes.js';
@@ -95,7 +95,7 @@ app.use(cors()); // Enable CORS for all origins
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-connectDB().then(() => {
+//connectDB().then(() => {
   // Routes
   app.use('/users', userRoutes);
   app.use('/trips', tripsRoutes);
@@ -112,6 +112,6 @@ connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
   });
-}).catch((err) => {
-  console.error('Failed to connect to the database', err);
-});
+// }).catch((err) => {
+//   console.error('Failed to connect to the database', err);
+// });

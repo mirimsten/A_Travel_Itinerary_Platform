@@ -1,14 +1,13 @@
-import { getAllUsers, getUserById, createUser, updateUserById, deleteUserById } from '../models/userModel.js';
+import { getAllUsers, getUserById, getUserByEmail, createUser, updateUserById, deleteUserById } from '../models/userModel.js';
+import mongoose from 'mongoose';
 
 // Controller function to get all users
 export const getUsers_ = async (req, res) => {
-    // const { username } = req.query;
+    // const { id } = req.query;
     try {
-        console.log("nnnnnn")
         const users = await getAllUsers();
         res.status(200).json(users);
     } catch (error) {
-        console.log("llllll")
         res.status(500).json({ error: error.message });
     }
 };
@@ -17,11 +16,33 @@ export const getUsers_ = async (req, res) => {
 export const getUserById_ = async (req, res) => {
     const { id } = req.params;
     try {
-        const user = await getUserById(id);
-        if (user) {
+        let user;
+        if (!mongoose.Types.ObjectId.isValid(id)) {//במקרה שהמזהה לא תקין הוא גם לא ימצא אותו, נחזיר פלט שיכניס אותו לקונטרולר לאופציה שלא מצאו כזה משתמש.
+            user = [];
+        } else {
+            user = await getUserById(id);
+        }
+        if (user.length) {
             res.status(200).json(user);
         } else {
-            res.status(404).json({ message: `User with ID ${id} not found` });
+            // res.status(404).json({ message: `User with ID ${id} not found` });
+            res.status(404).json(user);
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Controller function to get a user by ID
+export const getUserByEmail_ = async (req, res) => {
+    const { email } = req.params;
+    try {
+        const user = await getUserByEmail(email);
+        if (user.length) {
+            res.status(200).json(user);
+        } else {
+            // res.status(404).json({ message: `User with email ${email} not found` });
+            res.status(404).json(user);
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
