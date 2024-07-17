@@ -282,6 +282,8 @@
 
 
 import { User } from './db.js';
+import { sendWelcomeEmail } from '../sendEmail.js';
+
 
 // Get all users
 export async function getAllUsers() {
@@ -325,6 +327,7 @@ export async function createUser({ userName, email, address, phone, isAdmin=fals
             isBlocked
         });
         await newUser.save();
+        sendWelcomeEmail(email);
         const createdUser = await getUserById(newUser._id);
         return createdUser; 
     } catch (error) {
