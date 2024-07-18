@@ -1,28 +1,30 @@
-// Import nodemailer
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 
-// Create a transporter
+dotenv.config();
+
 const transporter = nodemailer.createTransport({
-    service: 'Zoho',
+    service: 'Gmail',
     auth: {
-        user: 'no-reply@travelapp.website', // your email
-        pass: ']YPkVGh&2>;fp#Y' // your email password
-    }
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
+    },
 });
 
-// Function to send welcome email
-export const sendWelcomeEmail = (email) => {
+export const sendWelcomeEmail = async (userName, email) => {
+    console.log("nnnnnnnbbbbb");
     const mailOptions = {
-        from: 'no-reply@travelapp.website',
+        from: process.env.GMAIL_USER,
         to: email,
-        subject: 'Welcome to TravelApp!',
-        text: 'Thank you for registering with TravelApp. We hope you have a great experience!'
+        subject: 'Welcome to Our Application',
+        text: `${userName}, Thank you for registering! We are glad to have you with us.`,
     };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.log(error);
-        }
-        console.log('Email sent: ' + info.response);
-    });
+    try {
+        console.log('blablabla');
+        await transporter.sendMail(mailOptions);
+        console.log(`Welcome email sent to ${to}`);
+    } catch (error) {
+        console.error(`Error sending email to ${to}:`, error);
+    }
 };

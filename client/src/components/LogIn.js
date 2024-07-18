@@ -1,7 +1,8 @@
 // import '../logIn.css'
-import { CLIENT_COMPRESS } from 'mysql/lib/protocol/constants/client';
+// import { CLIENT_COMPRESS } from 'mysql/lib/protocol/constants/client';
 import React, { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
+import '../LogIn.css'
 
 const LogIn = () => {
 
@@ -168,6 +169,7 @@ const LogIn = () => {
   else {
     return (
       <div className='login'>
+        <div className='login-background'></div>
         {isBlocked && <div><p>you are a blocked user</p>
           <button onClick={resetUser}>ok</button>
         </div>}
