@@ -18,9 +18,9 @@ export const getPassword_ = async (req, res) => {
 
 // Controller function to create a new password for a user
 export const createPassword_ = async (req, res) => {
-    const { idOfUser, password } = req.body;
+    const { userId, password } = req.body;
     try {
-        const newPassword = await createPassword(idOfUser, password);
+        const newPassword = await createPassword(userId, password);
         res.status(201).json(newPassword);
     } catch (error) {
         res.status(500).json({ error: error.message });
