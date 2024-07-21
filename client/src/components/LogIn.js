@@ -26,7 +26,7 @@ const LogIn = () => {
 
       setIsFetching(true);
       const response = await fetch(`http://localhost:8080/users/email/${user.email}`);
-      if (!response.ok&&!response.status == 404) {//&&!response.status == 404
+      if (!response.ok&&!response.status === 404) {//&&!response.status == 404
         throw new Error('Did not receive expected data');
       }
       resData = await response.json();
@@ -46,7 +46,7 @@ const LogIn = () => {
 
       setIsFetching(true);
       const response = await fetch(`http://localhost:8080/passwords/${id}`);
-      if (!response.ok&&!response.status == 404) {
+      if (!response.ok&&!response.status === 404) {
         throw new Error('Did not receive expected data');
       }
       resData = await response.json();

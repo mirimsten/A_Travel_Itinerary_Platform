@@ -7,6 +7,7 @@ import Home from './components/Home';
 import Info from './components/Info';
 import ListTrips from './components/Trips/ListTrips';
 import Trip from './components/Trips/Trip';
+import LogOut from './components/LogOut';
 
 function AppContent() {
   const location = useLocation();
@@ -23,6 +24,7 @@ function AppContent() {
         <Route path="/users/:id" >
           <Route path="info" element={<Info />} />
           <Route path="home" element={<Home />} />
+          <Route path="logOut" element={<LogOut />} />
           <Route path="trips" element={<ListTrips />} />
           <Route path="trips/:trip-id/trip" element={<Trip />} />
           {/* <Route path="todos" element={<Todos />} />

@@ -90,7 +90,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors()); // Enable CORS for all origins
+app.use(cors({ origin: 'http://localhost:3000' })); // Enable CORS for all origins
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

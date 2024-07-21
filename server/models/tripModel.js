@@ -125,7 +125,7 @@
 // export async function getAllTrips({ type = "", value = "" }) {
 //     try {
 //         let query = {};
-        
+
 //         switch (type) {
 //             case "":
 //                 break;
@@ -230,37 +230,28 @@
 
 
 
-
-
 import { Trip } from './db.js';
 
 // Get all trips
-export async function getAllTrips({ type = "", value = "", sortBy = "" }) {
+export async function getAllTrips({ country = "", userId = "", sortBy = "", limit, offset }) {
     try {
         let query = {};
 
-        switch (type) {
-            case "":
-                break;
-            case "id":
-                query._id = value; // שימוש ב-Mongoose ID
-                break;
-            case "country":
-                query.country = value;
-                break;
-            case "userId":
-                query.userId = value;
-                break;
-            default:
-                throw new Error(`Invalid type: ${type}`);
+        if (country) {
+            query.country = country;
+        }
+        if (userId) {
+            query.userId = userId;
         }
 
         let sortQuery = {};
         if (sortBy === "likes") {
-            sortQuery.likes = -1; // מיון לפי לייקים בסדר יורד
+            sortQuery.likes = -1; // Sort by likes in descending order
         }
-
-        const trips = await Trip.find(query).sort(sortQuery);
+        const trips = await Trip.find(query)
+            .sort(sortQuery)
+            .limit(limit)
+            .skip(offset);
         return trips;
     } catch (error) {
         throw new Error(`Error fetching trips: ${error.message}`);
@@ -272,7 +263,7 @@ export async function getAllTrips({ type = "", value = "", sortBy = "" }) {
 // export async function getAllTrips({ type = "", value = "" }) {
 //     try {
 //         let query = {};
-        
+
 //         switch (type) {
 //             case "":
 //                 break;
@@ -300,7 +291,7 @@ export async function getAllTrips({ type = "", value = "", sortBy = "" }) {
 // export async function getAllTrips({ type = "", value = "" }) {
 //     try {
 //         let query = {};
-        
+
 //         switch (type) {
 //             case "":
 //                 break;

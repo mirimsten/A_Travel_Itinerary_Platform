@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import {useParams} from 'react-router-dom';
 import AddTrip from './AddTrip';
 import TripItem from './TripItem';
@@ -11,9 +11,17 @@ const ListTrips = () => {
     const [addTrip, setAddTrip] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
     const [fetchError, setFetchError] = useState(null);
+    const [country, setCountry] = useState("");
     const [page, setPage] = useState(0);
+    const [filterType, setFilterType] = useState("");
+    const [filterValue, setFilterValue] = useState("");
+    const [sortCriteria, setSortCriteria] = useState("");
 
     const API_URL = "http://localhost:8080/trips";
+
+    useEffect(() => {
+        getFromServer({ type: filterType, value: filterValue, sortBy: sortCriteria, offset: page * ITEMS_PER_PAGE });
+    }, [page, filterType, filterValue, sortCriteria]);
     // useEffect(() => {
     //     const usersInLS = localStorage.getItem('usersInLS');
     //     id.current = usersInLS ? JSON.parse(usersInLS)[0].id : null;
@@ -25,11 +33,9 @@ const ListTrips = () => {
     //         .catch((error) => setFetchError(error));
     // }, [])
 
-    useEffect(() => {
-        getFromServer({ offset: page * ITEMS_PER_PAGE });
-    }, [page]);
-
-    const [country, setCountry] = useState("");
+    // useEffect(() => {
+    //     getFromServer({ offset: page * ITEMS_PER_PAGE });
+    // }, [page]);
 
     const handleChangeCountry = (event) => {
         setCountry(event.target.value)
@@ -65,6 +71,8 @@ const ListTrips = () => {
     //     }
     // }
 
+    //קיימת בעיה: במעבר עמוד הסינונים מתבטלים
+
     const getFromServer = async ({ type = "", value = "", sortBy = "", limit = ITEMS_PER_PAGE, offset = 0 } = {}) => {
         try {
             let query = `?limit=${limit}&offset=${offset}`;
@@ -72,10 +80,10 @@ const ListTrips = () => {
                 case "":
                     break;
                 case "country":
-                    query += `&?country=${value}`;
+                    query += `&country=${value}`;
                     break;
                 case "myTrips":
-                    query += `&?userId=${value}`;
+                    query += `&userId=${value}`;
                     break;
                 default:
                     break;
@@ -86,6 +94,7 @@ const ListTrips = () => {
             }
 
             setIsFetching(true);
+            console.log(query);
             const response = await fetch(`${API_URL}${query}`);
             if (!response.ok && response.status !== 404) {
                 throw new Error('Did not receive expected data');
@@ -101,25 +110,52 @@ const ListTrips = () => {
         }
     };
 
-    const filterBy = async (filter) => {
-        console.log(trips);
+    // const filterBy = async (filter) => {
+    //     console.log(trips);
+    //     switch (filter) {
+    //         case 'allTrips':
+    //             await getFromServer();
+    //             break;
+    //         case 'country':
+    //             await getFromServer({ type: "country", value: country });
+    //             break;
+    //         case 'myTrips':
+    //             await getFromServer({ type: "myTrips", value: id });
+    //             break;
+    //         default:
+    //             await getFromServer();
+    //     }
+    // }
+
+    // const sortBy = (criteria) => {
+    //     getFromServer({ sortBy: criteria });
+    // };
+
+    const filterBy = (filter) => {
+        setPage(0); // Reset page to 0 when applying a new filter
         switch (filter) {
             case 'allTrips':
-                await getFromServer();
+                setFilterType("");
+                setFilterValue("");
                 break;
             case 'country':
-                await getFromServer({ type: "country", value: country });
+                setFilterType("country");
+                setFilterValue(country);
+                console.log(country);
                 break;
             case 'myTrips':
-                await getFromServer({ type: "myTrips", value: id });
+                setFilterType("myTrips");
+                setFilterValue(id);
                 break;
             default:
-                await getFromServer();
+                setFilterType("");
+                setFilterValue("");
         }
-    }
-
+    };
+    
     const sortBy = (criteria) => {
-        getFromServer({ sortBy: criteria });
+        setSortCriteria(criteria);
+        setPage(0); // Reset page to 0 when applying a new sort
     };
 
     const nextPage = () => {
@@ -133,9 +169,15 @@ const ListTrips = () => {
             setPage(prevPage => prevPage - 1);
         }
     };
-    //האם בטיחותי שהמזהה נמצא בURL
-    //לשאול אם עדיף לשמור את התמונות בדרייב
-    //מה עדיף: לשלוף פעם אחת את כל הטיולים ואז לסנן לפי הצורך==שליפה אחת או שלשלוף כל פעם מהשרת לפי הסינון הדרוש.
+
+    const addTripToState = (newTrip) => {
+        console.log(newTrip);
+        // setTrips((prevTrips) => [newTrip, ...prevTrips]);
+        setTrips((prevTrips) => [...prevTrips, newTrip[0]]);
+        setPage(0);
+        setAddTrip(false);
+    };
+
     if (isFetching) {
         return (
             <p>Loading...</p>
@@ -146,7 +188,7 @@ const ListTrips = () => {
         )
     } else if (addTrip) {
         return (
-            <AddTrip />
+            <AddTrip id={id} addTripToState={addTripToState}/>
         )
     } else {
         return (
@@ -175,10 +217,15 @@ const ListTrips = () => {
                     <button onClick={() => setAddTrip(true)}>+</button>
                 </div>
                 <ol>
-                    {trips.length && trips.map((trip) => (
-                        <TripItem key={trip.id} trip={trip} id={id} />
+                    {trips.length > 0 && trips.map((trip) => (
+                        <TripItem key={trip._id} trip={trip} id={id} />
                     ))}
                 </ol>
+                {trips.length===0&&<p>nothing else</p>}
+                <div>
+                    <button onClick={prevPage} disabled={page === 0}>Previous</button>
+                    <button onClick={nextPage} disabled={trips.length < ITEMS_PER_PAGE}>Next</button>
+                </div>
             </div>
         )
     }

@@ -13,9 +13,9 @@ import { getAllTrips, getTripById, createTrip, updateTrip, deleteTripById } from
 
 // controller function to get all trips
 export const getTrips_ = async (req, res) => {
-    const { type, value, sortBy } = req.query; // קבלת הפרמטרים מהשאילתה
+    const { country, userId, sortBy, limit, offset } = req.query; // קבלת הפרמטרים מהשאילתה
     try {
-        const trips = await getAllTrips({ type, value, sortBy });
+        const trips = await getAllTrips({ country, userId, sortBy, limit, offset });
         res.status(200).json(trips);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -41,9 +41,14 @@ export const getTripById_ = async (req, res) => {
 
 // Controller function to create a new trip
 export const createTrip_ = async (req, res) => {
-    const tripData = req.body;
+    const { userId, country, title, description, duration } = req.body;
+    // const photos = req.files.filter(file => file.mimetype.startsWith('image/')).map(file => file.path);
+    // const videos = req.files.filter(file => file.mimetype.startsWith('video/')).map(file => file.path);
+    const photos = req.files['photos'] ? req.files['photos'].map(file => file.path) : [];
+    const videos = req.files['videos'] ? req.files['videos'].map(file => file.path) : [];
+
     try {
-        const newTrip = await createTrip(tripData);
+        const newTrip = await createTrip({ userId, country, title, description, duration, photos, videos });
         res.status(201).json(newTrip);
     } catch (error) {
         res.status(500).json({ error: error.message });
