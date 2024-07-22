@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom';
 
-const TripItem = ({ trip, id }) => {
+const TripItem = ({ trip, id, trips, setTrips}) => {
   const [fetchError, setFetchError] = useState("");
   const [userName, setUserName] = useState("");
   const [move, setMove] = useState(false);
@@ -16,7 +16,13 @@ console.log(trip.userId);
   }, [])
 
   if (move) {
-    return <Navigate to={`/${trip._id}/trip`} />
+    console.log('Navigating with state:', { trip: trip, id: id, userName: userName, trips: trips, setTrips: setTrips});
+    return (
+      <Navigate 
+        to={`../trips/${trip._id}/trip`} 
+        state={{ trip: trip, id: id, userName: userName, trips: trips, setTrips: setTrips }} 
+      />
+    );
   }
   return (
     <div>

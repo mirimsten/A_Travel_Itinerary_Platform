@@ -74,7 +74,8 @@
 
 
 
-
+import path from 'path';
+import { fileURLToPath } from 'url';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -84,13 +85,17 @@ import tripsRoutes from './routes/tripsRoutes.js';
 import passwordsRoutes from './routes/passwordsRoutes.js';
 import commentsRoutes from './routes/commentsRoutes.js';
 import savedSearchTripsRoutes from './routes/savedSearchTripRoutes.js';
+import uploadRoutes from './routes/uploadsRoutes.js';
 
 dotenv.config({ path: './.env' });
 const app = express();
 const PORT = process.env.PORT || 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Middleware
-app.use(cors({ origin: 'http://localhost:3000' })); // Enable CORS for all origins
+// Middleware..{ origin: 'http://localhost:3000' }
+app.use(cors()); // Enable CORS for all origins
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -101,6 +106,7 @@ app.use(express.urlencoded({ extended: true }));
   app.use('/passwords', passwordsRoutes);
   app.use('/comments', commentsRoutes);
   app.use('/savedSearchTrips', savedSearchTripsRoutes);
+  app.use('/uploads', uploadRoutes);
 
   // Default route
   app.get("/", (req, res) => {

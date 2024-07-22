@@ -218,7 +218,7 @@ const ListTrips = () => {
                 </div>
                 <ol>
                     {trips.length > 0 && trips.map((trip) => (
-                        <TripItem key={trip._id} trip={trip} id={id} />
+                        <TripItem key={trip._id} trip={trip} id={id} trips={trips} setTrips={setTrips} />
                     ))}
                 </ol>
                 {trips.length===0&&<p>nothing else</p>}
