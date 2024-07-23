@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Navigate } from 'react-router-dom';
+// import { Navigate } from 'react-router-dom';
 
-const TripItem = ({ trip, id, trips, setTrips}) => {
+const TripItem = ({ trip, setMove, setTrip, setUserName, userName }) => {
   const [fetchError, setFetchError] = useState("");
-  const [userName, setUserName] = useState("");
-  const [move, setMove] = useState(false);
+  const [fetching, setIsFetching] = useState(false);
+
   useEffect(() => {
-console.log(trip.userId);
+    console.log(trip.userId);
     fetch(`http://localhost:8080/users/id/${trip.userId}`, {
       method: "GET",
     })
@@ -15,24 +15,27 @@ console.log(trip.userId);
       .catch((error) => setFetchError(error));
   }, [])
 
-  if (move) {
-    console.log('Navigating with state:', { trip: trip, id: id, userName: userName, trips: trips, setTrips: setTrips});
-    return (
-      <Navigate 
-        to={`../trips/${trip._id}/trip`} 
-        state={{ trip: trip, id: id, userName: userName, trips: trips, setTrips: setTrips }} 
-      />
-    );
-  }
+  // if (move) {
+  //   return (
+  //     <Navigate 
+  //       to={`../trips/${trip._id}/trip`} 
+  //       state={{ trip: trip, id: id, userName: userName }} //, trips: trips, setTrips: setTrips
+  //     />
+  //   );
+  // }
   return (
     <div>
-      <button onDoubleClick={() => setMove(true)}>
+      <button onDoubleClick={() => {
+        setMove(true);
+        setTrip(trip);
+      }}>
         <p>{userName}</p>
         <p>{trip.country}</p>
         <p>{trip.likes}</p>
       </button>
     </div>
   );
+
 }
 
 export default TripItem

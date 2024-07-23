@@ -14,7 +14,7 @@ const router = express.Router();
 router.get('/', getAllComments);
 
 // Route to retrieve comments by trip ID
-router.get('/post/:postId', getCommentsByTripId);
+router.get('/trip/:tripId', getCommentsByTripId);
 
 // Route to retrieve a comment by ID
 router.get('/:id', getCommentById);

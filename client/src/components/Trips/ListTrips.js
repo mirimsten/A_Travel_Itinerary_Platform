@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import {useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import AddTrip from './AddTrip';
 import TripItem from './TripItem';
+import Trip from './Trip';
 
 const ITEMS_PER_PAGE = 5;
 
 const ListTrips = () => {
-    const {id} = useParams();
+    const { id } = useParams();
     const [trips, setTrips] = useState([]);
     const [addTrip, setAddTrip] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
@@ -16,6 +17,9 @@ const ListTrips = () => {
     const [filterType, setFilterType] = useState("");
     const [filterValue, setFilterValue] = useState("");
     const [sortCriteria, setSortCriteria] = useState("");
+    const [userName, setUserName] = useState("");
+    const [move, setMove] = useState(false);
+    const [trip, setTrip] = useState({});
 
     const API_URL = "http://localhost:8080/trips";
 
@@ -152,7 +156,7 @@ const ListTrips = () => {
                 setFilterValue("");
         }
     };
-    
+
     const sortBy = (criteria) => {
         setSortCriteria(criteria);
         setPage(0); // Reset page to 0 when applying a new sort
@@ -188,9 +192,12 @@ const ListTrips = () => {
         )
     } else if (addTrip) {
         return (
-            <AddTrip id={id} addTripToState={addTripToState}/>
+            <AddTrip id={id} addTripToState={addTripToState} />
         )
-    } else {
+    } else if (move) {
+        return <Trip id={id} trips={trips} setTrips={setTrips} setMove={setMove} trip={trip} userName={userName}/>
+    }
+    else {
         return (
             <div>
                 <div className='trips'>
@@ -218,10 +225,10 @@ const ListTrips = () => {
                 </div>
                 <ol>
                     {trips.length > 0 && trips.map((trip) => (
-                        <TripItem key={trip._id} trip={trip} id={id} trips={trips} setTrips={setTrips} />
+                        <TripItem key={trip._id} trip={trip} setMove={setMove} setTrip={setTrip} setUserName={setUserName} userName={userName}/>
                     ))}
                 </ol>
-                {trips.length===0&&<p>nothing else</p>}
+                {trips.length === 0 && <p>nothing else</p>}
                 <div>
                     <button onClick={prevPage} disabled={page === 0}>Previous</button>
                     <button onClick={nextPage} disabled={trips.length < ITEMS_PER_PAGE}>Next</button>

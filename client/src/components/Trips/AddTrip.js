@@ -100,7 +100,6 @@ const AddTrip = ({ id, addTripToState }) => {
         const newTrip = await response.json();
         console.log(newTrip);
         addTripToState(newTrip);
-        // Do something after successful submission
       } else {
         const errorText = await response.text();
         console.error('Failed to add trip:', errorText);
