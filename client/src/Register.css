@@ -1,0 +1,55 @@
+.register-background {
+    background-image: url("C:\Users\user\Pictures\final_project.jpg"); 
+    background-size:100%;
+    background-position: center;
+    filter: blur(6px); 
+    height: 100vh;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+  
+  .register {
+display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+  }
+
+  /* .login form {
+    background-color: rgba(255, 255, 255, 0.9); 
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+    z-index: 1;
+  } */
+
+  .register form {
+    background-color: rgba(7, 68, 94, 0.6); /* רקע לבן עם שקיפות */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* הוספת צל */
+    width: 30%; /* רוחב באחוזים */
+    max-width: 600px; /* הגבלת רוחב מקסימלי */
+    height: 80%; /* גובה באחוזים */
+    max-height: 600px; /* הגבלת גובה מקסימלי */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+  
+  .register form label, 
+  .register form input, 
+  .register form button 
+  /* .login form p { */
+    {
+    width: 70%; /* רוחב באחוזים */
+    height: 10%;
+    margin-bottom: 10px; /* מרווח תחתון בין אלמנטים */
+    /* background-color:unset; */
+  }

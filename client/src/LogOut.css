@@ -1,0 +1,52 @@
+/* LogOut.css */
+.log-out-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* מרכז את התוכן בעמוד בגובה מלא של המסך */
+    /* background-color: #007bff; צבע רקע כחול */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    
+  }
+
+  .logout-background{
+        background-image: url("C:\Users\user\Pictures\final_project.jpg"); /* שנה לנתיב המתאים לתמונה שלך */
+        background-size:100%;
+        background-position: center;
+        filter: blur(6px); /* מוסיף טשטוש לתמונה */
+        height: 100vh;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+      
+  }
+  
+  .log-out-box {
+    background-color: rgba(7, 68, 94, 0.6); /* צבע רקע לבן עבור המסגרת */
+    border: 2px solid #ffffff; 
+    border-radius: 8px; /* עגל את פינות המסגרת */
+    padding: 90px; /* רווח פנימי סביב התוכן */
+    text-align: center; /* מרכז את הטקסט בתוך המסגרת */
+  }
+  
+  .log-out-box p {
+    font-size: 1.3rem; /* גודל טקסט עבור ההודעה */
+    color: #ffffff;
+  }
+  
+  .log-out-box button {
+    margin: 10px; /* רווח בין הכפתורים */
+    padding: 10px 20px; /* רווח פנימי סביב הטקסט בכפתור */
+    border: none;
+    border-radius: 5px; /* עגל את פינות הכפתור */
+    cursor: pointer; /* משנה את הסמן לאצבע בעת ריחוף */
+    background-color: rgba(7, 68, 94, 0.3); /* צבע רקע עבור הכפתור */
+    border: 1px solid #ffffff; 
+    color: white; /* צבע הטקסט בכפתור */
+  }
+  
+  .log-out-box button:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

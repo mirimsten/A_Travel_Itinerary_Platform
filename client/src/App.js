@@ -8,7 +8,7 @@ import Info from './components/Info';
 import ListTrips from './components/Trips/ListTrips';
 // import Trip from './components/Trips/Trip';
 import LogOut from './components/LogOut';
-import Comments from './components/comments/comments';
+import Comments from './components/Comments/Comments';
 
 function AppContent() {
   const location = useLocation();

@@ -1,0 +1,33 @@
+/* Home.css */
+.home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* מרכז את התוכן בעמוד בגובה מלא של המסך */
+    text-align: center;
+}
+
+.home-background {
+    /* אפשר להוסיף כאן סגנונות רקע אם נדרש */
+}
+
+.home a {
+    font-size: 2rem;
+    /* גודל טקסט גדול יותר */
+    text-decoration: none;
+    /* ביטול קו תחתון */
+    color: #5781a3;
+    /* צבע הקישור (תוכל לשנות לצבע אחר אם רצוי) */
+    border: 3px solid #5781a3;
+    /* צבע ומידות המסגרת */
+    padding: 20px 90px;
+    /* רווח פנימי סביב הטקסט */
+    /* border-radius: 8px; עגל את פינות המסגרת אם רצוי */
+    display: inline-block;
+    /* מתיר למסגרת להקיף את הקישור */
+}
+
+.home a:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

@@ -384,6 +384,13 @@ const commentsSchema = new Schema({
   imageUrl: { type: String }
 });
 
+const massagesSchema = new Schema({
+  // commentId: { type: Number, index: true, unique: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  content: { type: String },
+  isRead: { type: Boolean, default: false }
+});
+
 // // שימוש ב-AutoIncrement עבור commentsSchema
 // commentsSchema.plugin(AutoIncrement, { inc_field: 'commentId' });
 
@@ -393,10 +400,10 @@ const Password = mongoose.model('Password', passwordSchema);
 const Trip = mongoose.model('Trip', tripsSchema);
 const SavedSearchTrip = mongoose.model('Saved_Search_Trip', savedSearchTripsSchema);
 const Comment = mongoose.model('Comment', commentsSchema);
-
+const Massage = mongoose.model('Massage', massagesSchema);
 
 
 
 connectDB();
 
-export { User, Password, Trip, SavedSearchTrip, Comment };
+export { User, Password, Trip, SavedSearchTrip, Comment, Massage };

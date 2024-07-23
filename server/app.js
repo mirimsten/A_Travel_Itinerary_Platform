@@ -8,6 +8,10 @@ import passwordsRoutes from './routes/passwordsRoutes.js';
 import commentsRoutes from './routes/commentsRoutes.js';
 import savedSearchTripsRoutes from './routes/savedSearchTripRoutes.js';
 import uploadsRoutes from './routes/uploadsRoutes.js';
+import massageRoute from './routes/massageRoute.js';
+
+import fileUpload from 'express-fileupload';//הוספתי
+
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -29,8 +33,13 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(fileUpload({
+  limits: { fileSize: 1024 * 1024 *5 }//הוספתי
+}))
+app.use(express.static(path.join(__dirname, 'uploads')));//הוספתי
+// corsAccessControl(app);//הוספתי
+// routesInit(app);//הוספתי
 
 // Routes
 app.use('/users', userRoutes);
@@ -38,6 +47,7 @@ app.use('/trips', tripsRoutes);
 app.use('/passwords', passwordsRoutes);
 app.use('/comments', commentsRoutes);
 app.use('/savedSearchTrips', savedSearchTripsRoutes);
+app.use('/massages', massageRoute);
 app.use('/uploads', uploadsRoutes);
 
 // Default route

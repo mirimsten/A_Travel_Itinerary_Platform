@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FaTrashAlt, FaEdit } from 'react-icons/fa';
 
 const Trip = ({ id, trips, setTrips, setMove, trip, userName }) => {

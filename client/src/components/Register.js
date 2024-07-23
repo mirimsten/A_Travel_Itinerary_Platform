@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, Navigate } from 'react-router-dom';
+import '../Register.css'
 
 const Register = () => {
 
@@ -138,8 +139,9 @@ const Register = () => {
     } else {
         return (
             <div className='register'>
+                <div className='register-background'></div>
                 {/* {finallRediseration && <Navigate to="/finallRegister" />} */}
-                <p>Hello, please fill out the form</p>
+                {/* <p>Hello, please fill out the form</p> */}
                 <form >
                     <label>Enter your name:</label>
                     <input

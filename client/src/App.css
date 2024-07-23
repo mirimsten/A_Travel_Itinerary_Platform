@@ -1,3 +1,14 @@
+body {
+  background-image: url("C:\Users\user\Pictures\final_project.jpg"); /* יש להחליף את הנתיב לתמונה בהתאם למיקום הנכון */
+  background-size: cover;
+  background-attachment: fixed; /* מוודא שהרקע לא יזוז */
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif; /* דוגמה להוספת סגנון פונט כללי */
+}
+
 .App {
   text-align: center;
 }
@@ -14,7 +25,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: rgba(40, 44, 52, 0.9); /* שקיפות כדי לראות את הרקע */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -35,4 +46,8 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+* {
+  box-sizing: border-box;
 }
