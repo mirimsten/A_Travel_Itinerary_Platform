@@ -9,6 +9,7 @@ import ListTrips from './components/Trips/ListTrips';
 // import Trip from './components/Trips/Trip';
 import LogOut from './components/LogOut';
 import Comments from './components/Comments/Comments';
+// import ListTrips from './components/Trips_/ListTrips';
 
 function AppContent() {
   const location = useLocation();

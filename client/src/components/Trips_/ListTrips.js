@@ -7,7 +7,7 @@ import Trip from './Trip';
 const ITEMS_PER_PAGE = 5;
 
 const ListTrips = () => {
-    const id = JSON.parse(localStorage.getItem('usersInLS'))[0].id;
+    const { id } = useParams();
     const [trips, setTrips] = useState([]);
     const [addTrip, setAddTrip] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
@@ -25,58 +25,10 @@ const ListTrips = () => {
 
     useEffect(() => {
         getFromServer({ type: filterType, value: filterValue, sortBy: sortCriteria, offset: page * ITEMS_PER_PAGE });
-    }, [trip, page, filterType, filterValue, sortCriteria]);
-    // useEffect(() => {
-    //     const usersInLS = localStorage.getItem('usersInLS');
-    //     id.current = usersInLS ? JSON.parse(usersInLS)[0].id : null;
-    //     fetch(`${API_URL}`, {
-    //         method: "GET",
-    //     })
-    //         .then((response) => response.json())
-    //         .then((data) => setTrips(data))
-    //         .catch((error) => setFetchError(error));
-    // }, [])
-
-    // useEffect(() => {
-    //     getFromServer({ offset: page * ITEMS_PER_PAGE });
-    // }, [page]);
-
+    }, [page, filterType, filterValue, sortCriteria]);
     const handleChangeCountry = (event) => {
         setCountry(event.target.value)
     }
-
-    // const addPost = async (title) => {
-    //     try {
-    //         setIsFetching(true);
-    //         const addNewPost = {
-    //             user_id: id.current,
-    //             title: title,
-    //             body: "fill the body of post"
-    //         };
-    //         const response = await fetch(API_URL, {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify(addNewPost),
-    //         });
-
-    //         if (!response.ok) {
-    //             throw new Error('Did not receive expected data');
-    //         }
-
-    //         const json = await response.json();
-    //         console.log(json);
-    //         setPosts((prevPosts) => [...prevPosts, json[0]]);
-    //     } catch (error) {
-    //         setFetchError(error.message);
-    //     } finally {
-    //         setIsFetching(false);
-    //     }
-    // }
-
-    //קיימת בעיה: במעבר עמוד הסינונים מתבטלים
-
     const getFromServer = async ({ type = "", value = "", sortBy = "", limit = ITEMS_PER_PAGE, offset = 0 } = {}) => {
         try {
             let query = `?limit=${limit}&offset=${offset}`;
@@ -113,27 +65,6 @@ const ListTrips = () => {
             setIsFetching(false);
         }
     };
-
-    // const filterBy = async (filter) => {
-    //     console.log(trips);
-    //     switch (filter) {
-    //         case 'allTrips':
-    //             await getFromServer();
-    //             break;
-    //         case 'country':
-    //             await getFromServer({ type: "country", value: country });
-    //             break;
-    //         case 'myTrips':
-    //             await getFromServer({ type: "myTrips", value: id });
-    //             break;
-    //         default:
-    //             await getFromServer();
-    //     }
-    // }
-
-    // const sortBy = (criteria) => {
-    //     getFromServer({ sortBy: criteria });
-    // };
 
     const filterBy = (filter) => {
         setPage(0); // Reset page to 0 when applying a new filter
@@ -195,7 +126,7 @@ const ListTrips = () => {
             <AddTrip id={id} addTripToState={addTripToState} />
         )
     } else if (move) {
-        return <Trip id={id} trips={trips} setTrips={setTrips} setMove={setMove} trip={trip} setTrip={setTrip} userName={userName}/>
+        return <Trip id={id} trips={trips} setTrips={setTrips} setMove={setMove} trip={trip} userName={userName}/>
     }
     else {
         return (
@@ -239,4 +170,3 @@ const ListTrips = () => {
 }
 
 export default ListTrips
-// updatetrip={updatetrip} deletetrip={deletetrip}

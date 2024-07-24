@@ -29,10 +29,10 @@ export const getTripById_ = async (req, res) => {
     try {
         const trip = await getTripById(id);
         if (trip.length) {
-            res.status(200).json(user);
+            res.status(200).json(trip);
         } else {
             // res.status(404).json({ message: `User with ID ${id} not found` });
-            res.status(404).json(user);
+            res.status(404).json(trip);
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -41,21 +41,70 @@ export const getTripById_ = async (req, res) => {
 
 // Controller function to create a new trip
 export const createTrip_ = async (req, res) => {console.log(req.body)
-    const { userId, country, title, description, duration } = req.body;
-    if (!req.files || Object.keys(req.files).length === 0) { // בדיקה האם יש קבצים
-        return res.status(400).json({ msg: "No files were uploaded." });
-      }
+    const { userId, country, title, description, duration, photos, videos } = req.body;
+    // //---------------------------------------------------------------
+    // if (!req.files || Object.keys(req.files).length === 0) { // בדיקה האם יש קבצים
+    //     return res.status(400).json({ msg: "No files were uploaded." });
+    //   }
     
-      let myFile = req.files.photos; // האובייקט של התמונה
-      console.log("myFile");
-    console.log(myFile);
+    //   let myFile = req.files.photos; // האובייקט של התמונה
+    //   let myVidios = req.files.videos;
+    //   console.log(myFile);
+    //   if (req.files.photos != undefined) {
+    //     if (myFile && myFile.size <= 1024 * 1024 * 10) { // בדיקת גודל הקובץ
+    //       let whichFiles = [".png", ".jpg", ".jpeg", ".svg", ".gif", ".mp4", ".mov", ".avi", ".wmv", ".avchd", ".webm", ".flv"];
+    //       let extFile = path.extname(myFile.name);
+    //       const timestamp = Date.now();
+    //       const newFileName = `${timestamp}${extFile}`;
+    
+    //       if (whichFiles.includes(extFile)) { // בדיקת סיומת הקובץ
+    //         myFile.mv("uploads/" + newFileName, (err) => { // איפה נשמר
+    //           if (err) {
+    //             return res.status(500).json({ msg: "Error occurred while uploading the file", err });
+    //           }
+    
+    //         });
+    //       } else {
+    //         return res.status(400).json({ msg: "File must be an image or video" });
+    //       }
+    //     } else {
+    //       return res.status(400).json({ msg: "File too big, max 10 MB!" });
+    //     }
+    //   }
+    //   if (req.files.videos != undefined) {
+    //     console.log("videos")
+    //     if (myVidios && myVidios.size <= 1024 * 1024 * 10) { // בדיקת גודל הקובץ
+    //       let whichFiles = [".png", ".jpg", ".jpeg", ".svg", ".gif", ".mp4", ".mov", ".avi", ".wmv", ".avchd", ".webm", ".flv"];
+    //       let extFile = path.extname(myVidios.name);
+    //       const timestamp = Date.now();
+    //       const newFileName = `${timestamp}${extFile}`;
+    
+    //       if (whichFiles.includes(extFile)) { // בדיקת סיומת הקובץ
+    //         myVidios.mv("uploads/" + newFileName, (err) => { // איפה נשמר
+    //           if (err) {
+    //             return res.status(500).json({ msg: "Error occurred while uploading the file", err });
+    //           }
+    //           // res.json({ msg: "File uploaded successfully" });
+    //         });
+    //       } else {
+    //         return res.status(400).json({ msg: "File must be an image or video" });
+    //       }
+    //     } else {
+    //       return res.status(400).json({ msg: "File too big, max 10 MB!" });
+    //     }
+    //   }
+    //   res.json({ msg: "File uploaded successfully" });
+      //-------------------------------------------
     // const photos = req.files.filter(file => file.mimetype.startsWith('image/')).map(file => file.path);
     // const videos = req.files.filter(file => file.mimetype.startsWith('video/')).map(file => file.path);
-    const photos = req.files['photos'] ? req.files['photos'].map(file => file.path) : [];
-    const videos = req.files['videos'] ? req.files['videos'].map(file => file.path) : [];
+
+
+    // const photos = req.files['photos'] ? req.files['photos'].map(file => file.path) : [];
+    // const videos = req.files['videos'] ? req.files['videos'].map(file => file.path) : [];
 
     try {
         const newTrip = await createTrip({ userId, country, title, description, duration, photos, videos });
+        console.log(userId+" "+ country+" "+title+" "+description+" "+duration+" "+photos+" "+videos)
         res.status(201).json(newTrip);
     } catch (error) {
         res.status(500).json({ error: error.message });

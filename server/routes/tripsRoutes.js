@@ -6,7 +6,6 @@ import {
     updateTrip_ as updateTrip,
     deleteTrip_ as deleteTrip
 } from '../controllers/tripController.js';
-import { upload } from '../middlewares/upload.js';
 
 const router = express.Router();
 
@@ -17,7 +16,7 @@ router.get('/', getTrips);
 router.get('/:id', getTripById);
 
 // Route to create a new trip
-router.post('/', createTrip);//, upload
+router.post('/', createTrip);
 
 // Route to update a trip
 router.put('/:id', updateTrip);

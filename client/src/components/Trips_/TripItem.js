@@ -14,24 +14,16 @@ const TripItem = ({ trip, setMove, setTrip, setUserName, userName }) => {
       .then((data) => setUserName(data[0].userName))
       .catch((error) => setFetchError(error));
   }, [])
-
-  // if (move) {
-  //   return (
-  //     <Navigate 
-  //       to={`../trips/${trip._id}/trip`} 
-  //       state={{ trip: trip, id: id, userName: userName }} //, trips: trips, setTrips: setTrips
-  //     />
-  //   );
-  // }
+  
   return (
     <div>
       <button onDoubleClick={() => {
         setMove(true);
         setTrip(trip);
       }}>
-        <p>Advertiser name: {userName}</p>
-        <p>trip country: {trip.country}</p>
-        <p>{trip.likes} 👍🏻</p>
+        <p>{userName}</p>
+        <p>{trip.country}</p>
+        <p>{trip.likes}</p>
       </button>
     </div>
   );

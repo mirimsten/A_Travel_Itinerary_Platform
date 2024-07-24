@@ -11,24 +11,10 @@ const AddTrip = ({ id, addTripToState }) => {
     videos: []
   });
 
-  // const handleChangeNewTrip = (event, type) => {
-  //   if (type === 'photos' || type === 'videos') {
-  //     setNewTrip({
-  //       ...newTrip,
-  //       [type]: [...newTrip[type], ...event.target.files]
-  //     });
-  //   } else {
-  //     setNewTrip({
-  //       ...newTrip,
-  //       [type]: event.target.value
-  //     });
-  //   }
-  // };
-
   const handleChangeNewTrip = (event, type) => {
     const value = event.target.value;
     const files = Array.from(event.target.files || []);
-  
+
     setNewTrip(prevTrip => {
       if (type === 'photos' || type === 'videos') {
         return {
@@ -42,75 +28,86 @@ const AddTrip = ({ id, addTripToState }) => {
         };
       }
     });
+    console.log(newTrip);
   };
-
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   const formData = new FormData();
-  //   formData.append('title', newTrip.title);
-  //   formData.append('country', newTrip.country);
-  //   formData.append('description', newTrip.description);
-
-  //   for (let i = 0; i < newTrip.images.length; i++) {
-  //     formData.append('images', newTrip.images[i]);
-  //   }
-
-  //   try {
-  //     const response = await fetch('http://localhost:8080/trips', {
-  //       method: 'POST',
-  //       body: formData
-  //     });
-
-  //     if (response.ok) {
-  //       console.log('Trip added successfully');
-  //       // Do something after successful submission
-  //     } else {
-  //       console.error('Failed to add trip');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //   }
-  // };
   
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = new FormData();
-    formData.append('title', newTrip.title);
-    formData.append('userId', id);
-    formData.append('country', newTrip.country);
-    formData.append('description', newTrip.description);
-    formData.append('duration', newTrip.duration);
 
+    // בדיקה שהשדות הנדרשים מלאים
+    if (!newTrip.title || !newTrip.country || !newTrip.description || !newTrip.duration) {
+      alert('Please fill all required fields.');
+      return;
+    }
+
+    // יצירת אובייקט formData חדש לתמונות ולסרטונים
+    const photoVideoData = new FormData();
     newTrip.photos.forEach((photo) => {
-      formData.append('photos', photo);
+      photoVideoData.append('photos', photo);
     });
 
     newTrip.videos.forEach((video) => {
-      formData.append('videos', video);
+      photoVideoData.append('videos', video);
     });
 
     try {
-      const response = await fetch('http://localhost:8080/trips', {
+      // שליחת התמונות והסרטונים לשרת
+      const uploadResponse = await fetch('http://localhost:8080/uploads', {
         method: 'POST',
-        body: formData
+        body: photoVideoData
       });
 
-      if (response.ok) {
-        console.log('Trip added successfully');
-        const newTrip = await response.json();
-        console.log(newTrip);
-        addTripToState(newTrip);
+      if (uploadResponse.ok) {
+        const uploadedFiles = await uploadResponse.json();
+        console.log('Files uploaded successfully:', uploadedFiles);
+
+        // יצירת אובייקט formData חדש לטיול
+        const tripData = new FormData();
+        tripData.append('title', newTrip.title);
+        tripData.append('userId', id);
+        tripData.append('country', newTrip.country);
+        tripData.append('description', newTrip.description);
+        tripData.append('duration', newTrip.duration);
+
+        // הוספת שמות הקבצים החדשים ל-tripData
+        if (uploadedFiles.photos) {
+          uploadedFiles.photos.forEach((photo) => {
+            tripData.append('photos', photo);
+          });
+        }
+
+        if (uploadedFiles.videos) {
+          uploadedFiles.videos.forEach((video) => {
+            tripData.append('videos', video);
+          });
+        }
+
+        // שליחת נתוני הטיול לשרת
+        const tripResponse = await fetch('http://localhost:8080/trips', {
+          method: 'POST',
+          body: tripData
+        });
+
+        if (tripResponse.ok) {
+          console.log('Trip added successfully');
+          const newTrip = await tripResponse.json();
+          console.log(newTrip);
+          addTripToState(newTrip);
+        } else {
+          const errorText = await tripResponse.text();
+          console.error('Failed to add trip:', errorText);
+        }
       } else {
-        const errorText = await response.text();
-        console.error('Failed to add trip:', errorText);
+        const errorText = await uploadResponse.text();
+        console.error('Failed to upload files:', errorText);
       }
     } catch (error) {
       console.error('Error:', error);
     }
   };
-  // (event) => handleSubmit(event)
+
   return (
-    <form onSubmit={(e) =>handleSubmit(e)}>
+    <form onSubmit={(e) => handleSubmit(e)}>
       <label htmlFor="title">Title:</label>
       <input
         type="text"
@@ -118,6 +115,7 @@ const AddTrip = ({ id, addTripToState }) => {
         onChange={(event) => handleChangeNewTrip(event, 'title')}
         name="title"
         id="title"
+        required
       />
       <label htmlFor="country">Country:</label>
       <input
@@ -126,6 +124,7 @@ const AddTrip = ({ id, addTripToState }) => {
         onChange={(event) => handleChangeNewTrip(event, 'country')}
         name="country"
         id="country"
+        required
       />
       <label htmlFor="description">Description:</label>
       <textarea
@@ -133,7 +132,8 @@ const AddTrip = ({ id, addTripToState }) => {
         onChange={(event) => handleChangeNewTrip(event, 'description')}
         name="description"
         id="description"
-        rows="4"
+        rows="7"
+        required
       />
       <label htmlFor="duration">Duration:</label>
       <input
@@ -142,6 +142,7 @@ const AddTrip = ({ id, addTripToState }) => {
         onChange={(event) => handleChangeNewTrip(event, 'duration')}
         name="duration"
         id="duration"
+        required
       />
       <label htmlFor="photos">Upload Photos:</label>
       <input
@@ -175,5 +176,4 @@ const AddTrip = ({ id, addTripToState }) => {
 };
 
 export default AddTrip;
-//לשנות לטקסט בוקס או משהו
 
