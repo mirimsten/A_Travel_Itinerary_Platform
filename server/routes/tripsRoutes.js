@@ -17,7 +17,7 @@ router.get('/', getTrips);
 router.get('/:id', getTripById);
 
 // Route to create a new trip
-router.post('/', upload, createTrip);
+router.post('/', createTrip);//, upload
 
 // Route to update a trip
 router.put('/:id', updateTrip);

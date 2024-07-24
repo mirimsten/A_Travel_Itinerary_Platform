@@ -80,6 +80,7 @@ import fs from 'fs';
 // הגדרת אחסון
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    console.log("destination");
     const uploadDir = path.join(__dirname, 'uploads');
     if (!fs.existsSync(uploadDir)) {
       try {
@@ -92,6 +93,7 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
+    console.log("filename");
     cb(null, Date.now() + path.extname(file.originalname));
   }
 });
@@ -99,6 +101,8 @@ const storage = multer.diskStorage({
 
 // סינון קבצים
 const fileFilter = (req, file, cb) => {
+  console.log("fileFilter");
+  console.log(file.mimetype)
   if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
     cb(null, true);
   } else {
@@ -111,3 +115,5 @@ export const upload = multer({
   storage: storage,
   fileFilter: fileFilter
 }).fields([{ name: 'photos', maxCount: 4 }, { name: 'videos', maxCount: 2 }]);
+// }).fields([{ name: 'files', maxCount: 4 }]);
+// }).array('files', 6); 

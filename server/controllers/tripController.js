@@ -40,8 +40,15 @@ export const getTripById_ = async (req, res) => {
 };
 
 // Controller function to create a new trip
-export const createTrip_ = async (req, res) => {
+export const createTrip_ = async (req, res) => {console.log(req.body)
     const { userId, country, title, description, duration } = req.body;
+    if (!req.files || Object.keys(req.files).length === 0) { // בדיקה האם יש קבצים
+        return res.status(400).json({ msg: "No files were uploaded." });
+      }
+    
+      let myFile = req.files.photos; // האובייקט של התמונה
+      console.log("myFile");
+    console.log(myFile);
     // const photos = req.files.filter(file => file.mimetype.startsWith('image/')).map(file => file.path);
     // const videos = req.files.filter(file => file.mimetype.startsWith('video/')).map(file => file.path);
     const photos = req.files['photos'] ? req.files['photos'].map(file => file.path) : [];

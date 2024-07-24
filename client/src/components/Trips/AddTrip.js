@@ -108,9 +108,9 @@ const AddTrip = ({ id, addTripToState }) => {
       console.error('Error:', error);
     }
   };
-
+  // (event) => handleSubmit(event)
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={(e) =>handleSubmit(e)}>
       <label htmlFor="title">Title:</label>
       <input
         type="text"

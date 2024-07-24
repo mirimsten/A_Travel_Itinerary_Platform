@@ -26,16 +26,12 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 // app.use(cors()); // Enable CORS for all origins
-app.use(cors({
-  origin: 'http://localhost:3000',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type']
-}));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(fileUpload({
-  limits: { fileSize: 1024 * 1024 *5 }//הוספתי
+  limits: { fileSize: 1024 * 1024 *10 }//הוספתי
 }))
 app.use(express.static(path.join(__dirname, 'uploads')));//הוספתי
 // corsAccessControl(app);//הוספתי
