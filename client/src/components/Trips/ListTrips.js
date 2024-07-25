@@ -197,6 +197,7 @@ const ListTrips = () => {
             <AddTrip id={id} addTripToState={addTripToState} />
         )
     } else if (move) {
+        console.log(trip);
         return <Trip id={id} trips={trips} setTrips={setTrips} setMove={setMove} trip={trip} setTrip={setTrip} userName={userName}/>
     }
     else {

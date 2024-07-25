@@ -7,6 +7,9 @@ const Trip = ({ id, trips, setTrips, setMove, trip, setTrip, userName }) => {
   const [fetchError, setFetchError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const sameUser = trip.userId === id;
+console.log("11111 "+trip);
+console.log(trip.duration);
+console.log(trip.likes);
 
   const [updateTrip, setUpdateTrip] = useState({
     title: trip.title,
@@ -22,16 +25,11 @@ const Trip = ({ id, trips, setTrips, setMove, trip, setTrip, userName }) => {
   const [newVideos, setNewVideos] = useState([]);
 
   const handleLikeButtonClick = async () => {
-    setUpdateTrip(prevState => ({
-      ...prevState,
-      likes: prevState.likes + 1
-    }));
-
-    console.log(updateTrip.likes);
+    const addLike = updateTrip.likes + 1;
 
     try {
       setIsFetching(true);
-      await handleSaveButton();
+      await handleSaveButton(addLike);
     } catch (error) {
       console.error('Failed to update likes on server:', error);
     } finally {
@@ -39,8 +37,9 @@ const Trip = ({ id, trips, setTrips, setMove, trip, setTrip, userName }) => {
     }
   };
 
-  const handleSaveButton = async () => {
+  const handleSaveButton = async (likes = 0) => {
     try {
+      console.log(likes);
       setIsFetching(true);
       const tripData = new FormData();
       console.log(newPhotos);
@@ -67,10 +66,21 @@ const Trip = ({ id, trips, setTrips, setMove, trip, setTrip, userName }) => {
         tripData.append('country', updateTrip.country);
         tripData.append('description', updateTrip.description);
         tripData.append('duration', updateTrip.duration);
-        
-      console.log(updateTrip.likes);
+        // console.log(likes);
+        // console.log(likes.toString());
+        // tripData.append('likes', likes.toString());
+
+        // tripData.append('likes', likes);
+
+      // console.log(updateTrip.likes);
+      if(likes!=updateTrip.likes){
+        tripData.append('likes', likes);
+        console.log(tripData);
+      }else{
         tripData.append('likes', updateTrip.likes);
         console.log(tripData);
+      }
+        
 
         updateTrip.photos.forEach((photo) => {
           tripData.append('photos', photo);
@@ -273,7 +283,7 @@ const Trip = ({ id, trips, setTrips, setMove, trip, setTrip, userName }) => {
               <div key={index}>{video.name}</div>
             ))}
           </div>
-          <button onClick={handleSaveButton}>Save</button>
+          <button onClick={() => handleSaveButton(updateTrip.likes)}>Save</button>
           <button onClick={handleCancelUpdate}>Cancel</button>
         </>
       ) : (

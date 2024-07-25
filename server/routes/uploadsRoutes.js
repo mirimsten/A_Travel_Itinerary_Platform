@@ -292,6 +292,7 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { v4 as uuidv4 } from 'uuid'; // ייבוא uuid
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -309,8 +310,9 @@ router.post("/", async (req, res) => {
       if (file && file.size <= 1024 * 1024 * 10) { // בדיקת גודל הקובץ
         let whichFiles = [".png", ".jpg", ".jpeg", ".svg", ".gif", ".mp4", ".mov", ".avi", ".wmv", ".avchd", ".webm", ".flv"];
         let extFile = path.extname(file.name).toLowerCase();
-        const timestamp = Date.now();
-        const newFileName = `${timestamp}${extFile}`;
+        // const timestamp = Date.now();  
+        // const newFileName = `${timestamp}${extFile}`;
+        const newFileName = `${uuidv4()}${extFile}`;
 
         if (whichFiles.includes(extFile)) { // בדיקת סיומת הקובץ
           file.mv(path.join('uploads', newFileName), (err) => { // איפה נשמר
