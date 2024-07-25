@@ -46,7 +46,8 @@ export async function createTrip({ userId, country, title, description, duration
             description,
             duration,
             photos,
-            videos
+            videos,
+            likes: 0
         });
         await newTrip.save();
         return await getTripById(newTrip._id);

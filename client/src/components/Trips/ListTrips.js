@@ -20,12 +20,13 @@ const ListTrips = () => {
     const [userName, setUserName] = useState("");
     const [move, setMove] = useState(false);
     const [trip, setTrip] = useState({});
+    const [trigger, setTrigger] = useState(false);
 
     const API_URL = "http://localhost:8080/trips";
 
     useEffect(() => {
         getFromServer({ type: filterType, value: filterValue, sortBy: sortCriteria, offset: page * ITEMS_PER_PAGE });
-    }, [trip, page, filterType, filterValue, sortCriteria]);
+    }, [trigger, trip, page, filterType, filterValue, sortCriteria]);
     // useEffect(() => {
     //     const usersInLS = localStorage.getItem('usersInLS');
     //     id.current = usersInLS ? JSON.parse(usersInLS)[0].id : null;
@@ -178,7 +179,8 @@ const ListTrips = () => {
         console.log(newTrip);
         // setTrips((prevTrips) => [newTrip, ...prevTrips]);
         setTrips((prevTrips) => [...prevTrips, newTrip[0]]);
-        setPage(0);
+        //setPage(0);
+        setTrigger(prev => !prev);
         setAddTrip(false);
     };
 

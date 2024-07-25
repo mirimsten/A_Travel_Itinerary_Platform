@@ -43,17 +43,22 @@ const Trip = ({ id, trips, setTrips, setMove, trip, setTrip, userName }) => {
     try {
       setIsFetching(true);
       const tripData = new FormData();
+      console.log(newPhotos);
+      console.log(newVideos);
       if (newPhotos.length > 0 || newVideos.length > 0) {
         const uploadedFiles = await handleUpload();
+        console.log("uploadedFiles"+" "+ uploadedFiles);
         if (uploadedFiles.photos) {
           uploadedFiles.photos.forEach((photo) => {
             tripData.append('photos', photo);
+            console.log(photo);
           });
         }
 
         if (uploadedFiles.videos) {
           uploadedFiles.videos.forEach((video) => {
             tripData.append('videos', video);
+            console.log(video);
           });
         }
       }
@@ -62,15 +67,19 @@ const Trip = ({ id, trips, setTrips, setMove, trip, setTrip, userName }) => {
         tripData.append('country', updateTrip.country);
         tripData.append('description', updateTrip.description);
         tripData.append('duration', updateTrip.duration);
+        
       console.log(updateTrip.likes);
         tripData.append('likes', updateTrip.likes);
+        console.log(tripData);
 
         updateTrip.photos.forEach((photo) => {
           tripData.append('photos', photo);
+          console.log(tripData);
         });
 
         updateTrip.videos.forEach((video) => {
           tripData.append('videos', video);
+          console.log(tripData);
         });
 
       // const updatedTrip = {
@@ -158,12 +167,12 @@ const Trip = ({ id, trips, setTrips, setMove, trip, setTrip, userName }) => {
         method: 'POST',
         body: formData
       });
-
       if (uploadResponse.ok) {
-        const uploadedFiles = await uploadResponse.json();
+        const uploadedFiles = await uploadResponse.json(); // קריאה לתוכן התגובה כ־JSON
         console.log('Files uploaded successfully:', uploadedFiles);
-        return uploadResponse;
-      } else {
+        return uploadedFiles; // החזרת התוכן המפורש של התגובה
+    }
+       else {
         const errorText = await uploadResponse.text();
         console.error('Failed to upload files:', errorText);
         return null;
