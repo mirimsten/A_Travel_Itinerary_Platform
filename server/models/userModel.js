@@ -327,7 +327,11 @@ export async function createUser({ userName, email, address, phone, isAdmin=fals
             isBlocked
         });
         await newUser.save();
-        sendWelcomeEmail(userName, email).catch(console.error);
+        try {
+            await sendWelcomeEmail(userName, email);
+        } catch (emailError) {
+            console.error(`Error sending email to ${email}: ${emailError.message}`);
+        }
         console.log('מתחת לשליחת המייל');
         const createdUser = await getUserById(newUser._id);
         return createdUser; 

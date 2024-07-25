@@ -1,0 +1,32 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    
+  }
+  
+  .input-group {
+    margin-bottom: 1rem;
+  }
+  
+  .flights-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .flight-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: rgba(7, 68, 94, 0.6);
+    color: #fff;
+  }
+  
+  .flight-card div {
+    text-align: left;
+  }

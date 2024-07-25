@@ -100,7 +100,20 @@ const ListTrips = () => {
 
             setIsFetching(true);
             console.log(query);
-            const response = await fetch(`${API_URL}${query}`);
+            // const response = await fetch(`${API_URL}${query}`);
+            //--------------------------שונה ע"י המורה
+            let currUser = window.localStorage["usersInLS"];
+            currUser = JSON.parse(currUser);
+            console.log(query);
+            let response = await fetch(`${API_URL}${query}`,
+            {
+               
+                headers: {
+                  'Authorization': 'Basic '+ currUser[0].token,
+                }
+            }
+            );
+            //-------------------------------------
             if (!response.ok && response.status !== 404) {
                 throw new Error('Did not receive expected data');
             }

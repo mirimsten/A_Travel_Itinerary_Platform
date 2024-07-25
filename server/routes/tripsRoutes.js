@@ -6,11 +6,12 @@ import {
     updateTrip_ as updateTrip,
     deleteTrip_ as deleteTrip
 } from '../controllers/tripController.js';
+import { authenticateToken } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
 // Route to retrieve all trips
-router.get('/', getTrips);
+router.get('/', authenticateToken, getTrips);
 
 // Route to retrieve a trip by ID
 router.get('/:id', getTripById);

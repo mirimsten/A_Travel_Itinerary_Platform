@@ -10,6 +10,8 @@ import ListTrips from './components/Trips/ListTrips';
 import LogOut from './components/LogOut';
 import Comments from './components/Comments/Comments';
 // import ListTrips from './components/Trips_/ListTrips';
+import FlightsSearch from './api';
+import Massages from './components/Massages/Massages';
 
 function AppContent() {
   const location = useLocation();
@@ -27,6 +29,8 @@ function AppContent() {
           <Route path="info" element={<Info />} />
           <Route path="home" element={<Home />} />
           <Route path="logOut" element={<LogOut />} />
+          <Route path="newTrip" element={<FlightsSearch />} />
+          <Route path="massages" element={<Massages />} />
           <Route path="trips" element={<ListTrips />} />
           <Route path="trips/:tripId/comments" element={<Comments />} />
           {/* <Route path="trips/:trip-id/trip" element={<Trip />} /> */}

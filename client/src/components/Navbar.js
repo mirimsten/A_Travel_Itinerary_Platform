@@ -15,6 +15,10 @@ const Navbar = () => {
       <Link to={`../users/${user.id}/newTrip`}>New trip</Link><br/>
       <Link to={`../users/${user.id}/logOut`}>Logout</Link><br/>
       <Link to={`../users/${user.id}/home`}>Home</Link><br/>
+      {user.isAdmin && (
+      <>
+        <Link to={`../users/${user.id}/home`}>Users</Link><br/>
+      </>)}
     </nav>
   );
 };

@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+    login,
     getUsers_ as getUsers,
     getUserById_ as getUserById,
     getUserByEmail_ as getUserByEmail,
@@ -21,6 +22,8 @@ router.get('/email/:email', getUserByEmail);
 
 // Route to create a new user
 router.post('/', createUser);
+
+router.post('/login', login)
 
 // Route to update a user
 router.put('/:id', updateUser);

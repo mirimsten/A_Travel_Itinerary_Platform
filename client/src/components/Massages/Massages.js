@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CommentItem from './CommentItem';
+import MassageItem from './MassageItem';
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { useParams } from 'react-router-dom';
 
 
-const Comments = () => {
+const Massages = () => {
 
     const { tripId } = useParams();
     const navigate = useNavigate();
-    const [comments, setComments] = useState([]);
+    const [Massages, setMassages] = useState([]);
     const [isFetching, setIsFetching] = useState(false);
     const [fetchError, setFetchError] = useState(null);
-    const [commentsToAdd, setCommentsToAdd] = useState({ content: "", imageUrl: "" });
+    const [MassagesToAdd, setMassagesToAdd] = useState({ content: "", isRead: false });
     const [adding, setAdding] = useState(false);
     const usersInLS = localStorage.getItem('usersInLS');
     const user = usersInLS ? JSON.parse(usersInLS)[0] : {};
-    const API_URL = "http://localhost:8080/comments";
-
+    const API_URL = "http://localhost:8080/massages";
+    //const API_URL = `http://localhost:8080//${user._id}/massages`
     useEffect(() => {
-        const fetchComments = async () => {
+        const fetchMassages = async () => {
             try {
                 setIsFetching(true);
-                const response = await fetch(`${API_URL}/trip/${tripId}`, {
+                const response = await fetch(`${API_URL}/userId/${user.id}`, {
                     method: "GET",
                 });
 
@@ -31,7 +31,7 @@ const Comments = () => {
                 }
 
                 const data = await response.json();
-                setComments(data);
+                setMassages(data);
             } catch (error) {
                 setFetchError(error);
             } finally {
@@ -39,17 +39,16 @@ const Comments = () => {
             }
         };
 
-        fetchComments();
-    }, [tripId]);
+        fetchMassages();
+    }, []);//??? מה להשים פה
 
-    const addComment = async () => {
+    const addMassage = async () => {
         try {
             setIsFetching(true);
-            const addNewComment = {
+            const addNewMassage = {
                 userId: user.id,
-                tripId: tripId,
-                content: commentsToAdd.content,
-                imageUrl: commentsToAdd.imageUrl
+                content: MassagesToAdd.content,
+                isRead: MassagesToAdd.isRead
             };
             console.log(user);
 
@@ -58,7 +57,7 @@ const Comments = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(addNewComment),
+                body: JSON.stringify(addNewMassage),
             });
 
             if (!response.ok) {
@@ -66,7 +65,7 @@ const Comments = () => {
             }
 
             const json = await response.json();
-            setComments((prevComments) => [...prevComments, json[0]]);
+            setMassages((prevMassages) => [...prevMassages, json[0]]);
 
         } catch (error) {
             setFetchError(error.message);
@@ -76,23 +75,23 @@ const Comments = () => {
         }
     };
 
-    const updateComment = async (commentUpdate) => {
+    const updateMassage = async (MassageUpdate) => {
         try {
             setIsFetching(true);
-            await fetch(`${API_URL}/${commentUpdate._id}`, {
+            await fetch(`${API_URL}/${MassageUpdate._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(commentUpdate)
+                body: JSON.stringify(MassageUpdate)
             }).then((response) => {
                 if (!response.ok) {
                     throw new Error('Did not receive expected data');
                 }
                 let json = response.json();
                 console.log(json);
-                setComments(comments.map((comment) =>
-                    comment._id === commentUpdate._id ? { ...commentUpdate } : comment))
+                setMassages(Massages.map((Massage) =>
+                    Massage._id === MassageUpdate._id ? { ...MassageUpdate } : Massage))
             })
 
         } catch (error) {
@@ -101,8 +100,7 @@ const Comments = () => {
             setIsFetching(false);
         }
     }
-
-    const deleteComment = async (idToDelete) => {
+    const deleteMassage = async (idToDelete) => {
         try {
             setIsFetching(true);
             await fetch(`${API_URL}/${idToDelete}`, {
@@ -113,8 +111,8 @@ const Comments = () => {
                 }
                 // let json = response.json();
                 // console.log(json);
-                setComments(comments.filter((comment) =>
-                    comment._id !== idToDelete))
+                setMassages(Massages.filter((Massage) =>
+                    Massage._id !== idToDelete))
             })
         } catch (error) {
             setFetchError(error);
@@ -133,32 +131,34 @@ const Comments = () => {
         return <p>ERROR: {fetchError.toString()}</p>;
     } else {
         return (
-            <div className='comments'>
-                {adding?(<>
-                <input
-                    type="text"
-                    placeholder="Add Comment content"
-                    onChange={(event) => setCommentsToAdd({ ...commentsToAdd, content: event.target.value })} />
-                <input
-                    type="file"
-                    placeholder="Upload a photos"
-                    onChange={(event) => setCommentsToAdd({ ...commentsToAdd, imageUrl: event.target.value })} />
-                    <button onClick={addComment}><IoIosAddCircleOutline /></button>
-                    </>):(<>
-                <h2>Comments:</h2>
-                <button onClick={() => setAdding(true)}>+</button>
-                < ol >
-                    {
-                        comments.length && comments.map((comment) => (
-                            <CommentItem key={comment._id} comment={comment} updateComment={updateComment} deleteComment={deleteComment} user={user} />
-                        ))
-                    }
-                </ol >
-                <button onClick={handleGoBack}>Go Back to the trip</button>
+            <div className='Massages'>
+
+                {adding ? (<>
+                    <input
+                        type="text"
+                        placeholder="Add Massage content"
+                        onChange={(event) => setMassagesToAdd({ ...MassagesToAdd, content: event.target.value })} />
+                    <input
+                        type="text"
+                        placeholder="Add user id"
+                        onChange={(event) => setMassagesToAdd({ ...MassagesToAdd, userId: event.target.value })} />
+
+                    <button onClick={addMassage}><IoIosAddCircleOutline /></button>
+                </>) : (<>
+                    <h2>Massages:</h2>
+                    {user.isAdmin && <button onClick={() => setAdding(true)}>+</button>}
+                    < ol >
+                        {
+                            Massages.length && Massages.map((Massage) => (
+                                <MassageItem key={Massage._id} Massage={Massage} updateMassage={updateMassage} deleteMassage={deleteMassage} user={user} />
+                            ))
+                        }
+                    </ol >
+                    {/* <button onClick={handleGoBack}>Go Back to the trip</button> */}
                 </>)}
             </div>
         );
     }
 };
 
-export default Comments;
+export default Massages;

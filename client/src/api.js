@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './api.css';
 
-const NewTrip = () => {
-  const [startDate, setStartDate] = useState('');
-  const [destinationCountry, setDestinationCountry] = useState('');
+
+
+const FlightsSearch = () => {
+  const [departureDate, setDepartureDate] = useState('');
   const [destinationCity, setDestinationCity] = useState('');
-  const [lodging, setLodging] = useState('no'); // Default to 'no'
+  const [flights, setFlights] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [flights, setFlights] = useState([]);
+  const [destinationCountry, setDestinationCountry] = useState('');
 
-  const userCountry = 'Israel'; // Example user country; replace with actual user data
+  const userCountry = 'Israel';
+
+
 
   const handleSearch = async () => {
     setLoading(true);
@@ -38,7 +41,7 @@ const NewTrip = () => {
 
     //   Filter flights based on departure date
       const filteredFlights = data.filter(flight => 
-        new Date(flight.CHSTOL).toISOString().split('T')[0] === startDate
+        new Date(flight.CHSTOL).toISOString().split('T')[0] === departureDate
       );
 
       setFlights(filteredFlights);
@@ -52,17 +55,17 @@ const NewTrip = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <h1>New Trip</h1>
-      <div>
+      <div className="input-group">
         <label>Start Date: </label>
         <input 
           type="date" 
-          value={startDate} 
-          onChange={(e) => setStartDate(e.target.value)} 
+          value={departureDate} 
+          onChange={(e) => setDepartureDate(e.target.value)} 
         />
       </div>
-      <div>
+      <div className="input-group">
         <label>Destination Country: </label>
         <input 
           type="text" 
@@ -70,39 +73,33 @@ const NewTrip = () => {
           onChange={(e) => setDestinationCountry(e.target.value)} 
         />
       </div>
-      <div>
-        <label>Destination City: </label>
+      <div className="input-group">
+        <label>שם העיר: </label>
         <input 
           type="text" 
           value={destinationCity} 
           onChange={(e) => setDestinationCity(e.target.value)} 
         />
       </div>
-      <div>
-        <label>Lodging: </label>
-        <select 
-          value={lodging} 
-          onChange={(e) => setLodging(e.target.value)}
-        >
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-      <button onClick={handleSearch} disabled={loading}>
+    
+      <button onClick={handleSearch}>חיפוש</button>
+
+      {loading && <p>טוען נתונים...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
       <div>
         {flights.length > 0 && (
           <div>
             <h2>תוצאות חיפוש:</h2>
-            <ul>
+            <ul className="flights-list">
               {flights.map((flight, index) => (
-                <li key={index}>
+                <li key={index} className="flight-card">
                   <div>
                     <p>חברת תעופה: {flight.CHOPERD}</p>
                     <p>מספר טיסה: {flight.CHFLTN}</p>
                     <p>נמל יציאה: {flight.origin_airport}</p>
                     <p>זמן יציאה: {new Date(flight.CHSTOL).toLocaleString()}</p>
-                    <p>נמל הגעה: {flight.destination_airport}</p>
+                    <p>נמל הגעה: {flight.CHLOC1}</p>
                     <p>זמן הגעה: {new Date(flight.CHPTOL).toLocaleString()}</p>
                     <p>סטטוס: {flight.CHRMINE}</p>
                     <a href={`https://www.google.com/search?q=${flight.CHOPERD} ${flight.CHFLTN} flight`} target="_blank" rel="noopener noreferrer">
@@ -115,14 +112,9 @@ const NewTrip = () => {
           </div>
         )}
       </div>
-
-        {loading ? 'Creating Itinerary...' : 'Create Itinerary'}
-      </button>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+    {/* </div> */}
     </div>
   );
 };
 
-export default NewTrip;
+export default FlightsSearch;

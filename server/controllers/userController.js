@@ -1,5 +1,11 @@
 import { getAllUsers, getUserById, getUserByEmail, createUser, updateUserById, deleteUserById } from '../models/userModel.js';
 import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import { getPasswordByUserId, createPassword } from '../models/passwordModel.js';
+const generateAccessToken = (user) => {
+    return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: '1800s' });
+};
 
 // Controller function to get all users
 export const getUsers_ = async (req, res) => {
@@ -33,6 +39,46 @@ export const getUserById_ = async (req, res) => {
     }
 };
 
+export const login = async (req, res) => {
+    const { email ,password} = req.body;
+    console.log(email);
+    console.log(password)
+    try {
+        let users = await getUserByEmail(email);
+        console.log(users)
+        if (!users.length) {
+           
+            res.status(403).json("Login failed. Please check your username and password and try again.");
+        }
+        let user = users[0];
+        const passwordDb = await getPasswordByUserId(user._id);
+        console.log(passwordDb)
+        if (!passwordDb.length) {
+           
+            res.status(403).json("Login failed. Please check your username and password and try again.");
+        }
+        if (passwordDb[0].password == password) {
+            const token = generateAccessToken({ id: user._id,username: user.email });
+            let user1 = {
+                _id : user._id,
+                token : token,
+                email:user.email,
+                addres:user.address,
+                phone:user.phone
+            }
+           user.token = token;
+           console.log(token + " "+user.token);
+           console.log(user);
+            res.status(200).json(user1);
+        } else {
+            // res.status(404).json({ message: `Password for user with ID ${id} not found` });
+            res.status(403).json("Login failed. Please check your username and password and try again.");
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 // Controller function to get a user by ID
 export const getUserByEmail_ = async (req, res) => {
     const { email } = req.params;
@@ -49,12 +95,34 @@ export const getUserByEmail_ = async (req, res) => {
     }
 };
 
-// Controller function to create a new user
+// // Controller function to create a new user
+// export const createUser_ = async (req, res) => {
+//     const userData = req.body;
+//     try {
+//         const newUser = await createUser(userData);
+//         res.status(201).json(newUser);
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// };
+
 export const createUser_ = async (req, res) => {
-    const userData = req.body;
+
+    const { userName, email, address, phone } = req.body;
+    const adminEmail1 = process.env.ADMIN_EMAIL;
+    const adminEmail2 = process.env.ADMIN_EMAIL_;
+
+    
+      const userData = { userName, email, address, phone};
+  
+      if (email === adminEmail1 || email===adminEmail2 ) {
+        userData.isAdmin = true;
+      }
+
     try {
         const newUser = await createUser(userData);
-        res.status(201).json(newUser);
+        const token = generateAccessToken({ id: newUser._id, username: newUser.email });
+        res.status(201).json(newUser, token);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
