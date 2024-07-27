@@ -243,20 +243,20 @@ const LogIn = () => {
       const response = await fetch('http://localhost:8080/users/login', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            email: user.email,
-            password: user.password
+          email: user.email,
+          password: user.password
         }),
-    });
+      });
 
-    if (!response.ok) {
+      if (!response.ok) {
         throw new Error('login faild');
-    }
+      }
 
-     resData = await response.json();
-    console.log(resData);
+      resData = await response.json();
+      console.log(resData);
 
 
 
@@ -340,33 +340,38 @@ const LogIn = () => {
       setIsFetching(false);
     }
   }
-const handleSubmit = async () => {
+  const handleSubmit = async () => {
 
     let retData = await searchUser();
-    console.log(retData);
-    // console.log(users);
-    if (retData.token !="") {
-          setUser({
-            ...user,
-            id: retData._id
-          });
-          const currentDate = new Date();
-            const userToStorage = {
-              id: retData._id,
-              userName: retData.userName,
-              email: retData.email,
-              address: retData.address,
-              phone: retData.phone,
-              isAdmin: retData.isAdmin,
-              isBlocked: retData.isBlocked,
-              token: retData.token
-            }
-            localStorage.setItem('usersInLS', JSON.stringify([userToStorage]));
-            setIsExist(true);
-        } else {
-          setIsNewUser(true);
-          resetUser();
+    if (retData == "password not valid") {
+      setNeedNewpassword(true);
+    } else {
+      console.log(retData);
+      // console.log(users);
+      if (retData.token != "") {
+        setUser({
+          ...user,
+          id: retData._id
+        });
+        const currentDate = new Date();
+        const userToStorage = {
+          id: retData._id,
+          userName: retData.userName,
+          email: retData.email,
+          address: retData.address,
+          phone: retData.phone,
+          isAdmin: retData.isAdmin,
+          isBlocked: retData.isBlocked,
+          token: retData.token
         }
+        localStorage.setItem('usersInLS', JSON.stringify([userToStorage]));
+        setIsExist(true);
+      } else {
+        setIsNewUser(true);
+        resetUser();
+      }
+    }
+
   }
 
   if (!needNewpassword && isExist) {
@@ -411,7 +416,14 @@ const handleSubmit = async () => {
           />
 
           {isNewUser && <p>User does not exist</p>}
-          {needNewpassword && <p>Password is no longer valid please enter a new password</p>}
+          {needNewpassword && <><p>Password is no longer valid please enter a new password</p>
+          <label>Enter a new password:</label>
+          <input
+            type="text"
+            name="password"
+            onChange={(event) => handleOnChange(event, 'password')}
+            required
+          /></>}
           {needNewpassword && <button type="button" className='newPassword' onClick={handlenewPassword}>update</button>}
 
           {!needNewpassword && <button type="button" className='submit' onClick={handleSubmit}>login</button>}

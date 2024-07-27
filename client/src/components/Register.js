@@ -75,9 +75,15 @@ const Register = () => {
         }
     }
 
-    const addToLS = (user) => {
+    // const addToLS = (user) => {//miri.msten@gmail.com
+    //     localStorage.setItem('usersInLS', JSON.stringify(user));
+    //     handlePostPassword(user[0]._id);
+    //     setHomePage(true);
+    // };
+
+    const addToLS = async (user) => {
         localStorage.setItem('usersInLS', JSON.stringify(user));
-        handlePostPassword(user[0]._id);
+        await handlePostPassword(user[0]._id);
         setHomePage(true);
     };
 
@@ -103,7 +109,7 @@ const Register = () => {
 
             const json = await response.json();
             console.log(json);
-            addToLS(json);
+            await addToLS(json);
         } catch (error) {
             setFetchError(error.message);
         } finally {

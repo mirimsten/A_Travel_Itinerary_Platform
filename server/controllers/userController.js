@@ -40,36 +40,46 @@ export const getUserById_ = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-    const { email ,password} = req.body;
+    const { email, password } = req.body;
     console.log(email);
     console.log(password)
     try {
         let users = await getUserByEmail(email);
         console.log(users)
         if (!users.length) {
-           
             res.status(403).json("Login failed. Please check your username and password and try again.");
         }
         let user = users[0];
         const passwordDb = await getPasswordByUserId(user._id);
         console.log(passwordDb)
         if (!passwordDb.length) {
-           
+
             res.status(403).json("Login failed. Please check your username and password and try again.");
         }
         if (passwordDb[0].password == password) {
-            const token = generateAccessToken({ id: user._id,username: user.email });
+            const token = generateAccessToken({ id: user._id, username: user.email });
             let user1 = {
-                _id : user._id,
-                token : token,
-                email:user.email,
-                addres:user.address,
-                phone:user.phone
+                _id: user._id,
+                userName: user.userName,
+                token: token,
+                email: user.email,
+                address: user.address,
+                phone: user.phone,
+                isAdmin: user.isAdmin,
+                isBlocked: user.isBlocked
             }
-           user.token = token;
-           console.log(token + " "+user.token);
-           console.log(user);
-            res.status(200).json(user1);
+            //    user.token = token;
+            //    console.log(token + " "+user.token);
+            //    console.log(user);
+            const currentDate = new Date();
+            const ninetyDaysLater = new Date(passwordDb[0].createdAt);
+            ninetyDaysLater.setDate(ninetyDaysLater.getDate() + 90);
+            if (ninetyDaysLater <= currentDate) {
+                console.log("The password is no longer valid");
+                res.status(200).json("password not valid");
+            } else {
+                res.status(200).json(user1);
+            }
         } else {
             // res.status(404).json({ message: `Password for user with ID ${id} not found` });
             res.status(403).json("Login failed. Please check your username and password and try again.");
@@ -112,12 +122,12 @@ export const createUser_ = async (req, res) => {
     const adminEmail1 = process.env.ADMIN_EMAIL;
     const adminEmail2 = process.env.ADMIN_EMAIL_;
 
-    
-      const userData = { userName, email, address, phone};
-  
-      if (email === adminEmail1 || email===adminEmail2 ) {
+
+    const userData = { userName, email, address, phone };
+
+    if (email === adminEmail1 || email === adminEmail2) {
         userData.isAdmin = true;
-      }
+    }
 
     try {
         const newUser = await createUser(userData);

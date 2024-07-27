@@ -21,7 +21,7 @@ export const createPassword_ = async (req, res) => {
     const { userId, password } = req.body;
     try {
         const newPassword = await createPassword(userId, password);
-        res.status(201).json(newPassword);
+        res.status(201).json(/*newPassword*/);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

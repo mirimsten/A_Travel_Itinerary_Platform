@@ -6,6 +6,7 @@ const Trip = ({ id, trips, setTrips, setMove, trip, setTrip, userName }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [fetchError, setFetchError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [firstLike, setFirstLike] = useState(true);
   const sameUser = trip.userId === id;
 console.log("11111 "+trip);
 console.log(trip.duration);
@@ -33,6 +34,7 @@ console.log(trip.likes);
     } catch (error) {
       console.error('Failed to update likes on server:', error);
     } finally {
+      setFirstLike(false);
       setIsFetching(false);
     }
   };
@@ -293,7 +295,7 @@ console.log(trip.likes);
           <p>{updateTrip.country}</p>
           <p>{updateTrip.description}</p>
           <p>{updateTrip.duration}</p>
-          {(!sameUser) ? (<button onClick={handleLikeButtonClick}>{updateTrip.likes} 👍🏻</button>) : (
+          {((!sameUser)&&firstLike) ? (<button onClick={handleLikeButtonClick}>{updateTrip.likes} 👍🏻</button>) : (
             <p>{updateTrip.likes} 👍🏻</p>
           )}
 

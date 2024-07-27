@@ -307,7 +307,7 @@ router.post("/", async (req, res) => {
 
   const saveFile = (file, type) => {
     return new Promise((resolve, reject) => {
-      if (file && file.size <= 1024 * 1024 * 10) { // בדיקת גודל הקובץ
+      if (file && file.size <= 1024 * 1024 * 100) { // בדיקת גודל הקובץ
         let whichFiles = [".png", ".jpg", ".jpeg", ".svg", ".gif", ".mp4", ".mov", ".avi", ".wmv", ".avchd", ".webm", ".flv"];
         let extFile = path.extname(file.name).toLowerCase();
         // const timestamp = Date.now();  
